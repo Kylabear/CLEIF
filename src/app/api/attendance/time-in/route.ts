@@ -4,6 +4,8 @@ import { getSessionUser } from "@/lib/auth";
 import { getTodayAtMidnight } from "@/lib/date";
 import { prisma } from "@/lib/prisma";
 
+const OFF_SCHEDULE_TYPES = new Set<DayType>([DayType.DAY_OFF, DayType.LEAVE, DayType.SICK, DayType.HOLIDAY]);
+
 export async function POST() {
   const user = await getSessionUser();
   if (!user) {
@@ -22,7 +24,7 @@ export async function POST() {
     }
   });
 
-  if (offToday && [DayType.DAY_OFF, DayType.LEAVE, DayType.SICK].includes(offToday.type)) {
+  if (offToday && OFF_SCHEDULE_TYPES.has(offToday.type)) {
     return NextResponse.json(
       {
         error: "This employee is marked as off today and does not need to clock in.",
