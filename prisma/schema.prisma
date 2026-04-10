@@ -1,0 +1,74 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+enum UserRole {
+  ADMIN
+  EMPLOYEE
+}
+
+enum DayType {
+  DAY_OFF
+  LEAVE
+  SICK
+  HOLIDAY
+}
+
+enum AttendanceStatus {
+  PRESENT
+  LATE
+  ABSENT
+  ON_LEAVE
+  DAY_OFF
+}
+
+model Employee {
+  id            String             @id @default(cuid())
+  name          String
+  email         String             @unique
+  passwordHash  String
+  department    String?
+  role          UserRole           @default(EMPLOYEE)
+  isActive      Boolean            @default(true)
+  createdAt     DateTime           @default(now())
+  updatedAt     DateTime           @updatedAt
+  attendances   Attendance[]
+  scheduleItems ScheduleItem[]
+}
+
+model Attendance {
+  id            String           @id @default(cuid())
+  employeeId    String
+  date          DateTime
+  timeIn        DateTime?
+  timeOut       DateTime?
+  workedMinutes Int?
+  status        AttendanceStatus @default(PRESENT)
+  note          String?
+  createdAt     DateTime         @default(now())
+  updatedAt     DateTime         @updatedAt
+
+  employee Employee @relation(fields: [employeeId], references: [id], onDelete: Cascade)
+
+  @@unique([employeeId, date])
+  @@index([date])
+}
+
+model ScheduleItem {
+  id         String   @id @default(cuid())
+  employeeId String
+  date       DateTime
+  type       DayType
+  note       String?
+  createdAt  DateTime @default(now())
+
+  employee Employee @relation(fields: [employeeId], references: [id], onDelete: Cascade)
+
+  @@unique([employeeId, date])
+  @@index([date])
+}
