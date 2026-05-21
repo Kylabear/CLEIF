@@ -18,7 +18,8 @@ const config: Config = {
       },
       fontFamily: {
         display: ["'Space Grotesk'", "sans-serif"],
-        body: ["'Plus Jakarta Sans'", "sans-serif"]
+        body: ["'Plus Jakarta Sans'", "sans-serif"],
+        engage: ["'Pacifico'", "cursive"]
       },
       boxShadow: {
         glass: "0 12px 45px rgba(15, 23, 42, 0.25)"

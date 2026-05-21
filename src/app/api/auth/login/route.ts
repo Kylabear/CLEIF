@@ -1,7 +1,9 @@
+
 import bcrypt from "bcryptjs";
 import { NextResponse } from "next/server";
-import { prisma } from "@/lib/prisma";
-import { setSessionCookie } from "@/lib/auth";
+import { prisma } from "../../../../lib/prisma";
+// TODO: Update setSessionCookie import if needed for MongoDB
+import { setSessionCookie } from "../../../../lib/auth";
 
 export async function POST(request: Request) {
   try {
@@ -43,7 +45,7 @@ export async function POST(request: Request) {
     });
 
     return response;
-  } catch {
+  } catch (err) {
     return NextResponse.json({ error: "Unable to login." }, { status: 500 });
   }
 }
